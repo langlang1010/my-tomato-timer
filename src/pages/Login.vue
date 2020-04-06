@@ -17,12 +17,13 @@
      <transition  name="fade">
      <div class="txtb" v-if="show" >    
       <input  placeholder="username" type="text" class="in" >
+      <input  placeholder="E-mail" type="text" class="in" >
       <input class="in"  id="passone" type="password"  placeholder="password">
        <input class="in" id="passtwo"   type="password"  placeholder="repeat">
         </div>
      </transition>
-        <el-button   id="lbutton" round >Login</el-button>
-        
+        <el-button   id="lbutton" round v-if="showone" >Login</el-button>
+           <el-button   id="sbutton" round  v-if="show" >Submit</el-button>
      </div>
     </div>
     </div>
@@ -79,16 +80,16 @@ import axios from 'axios'
 #title{
   text-align: center;
   position:absolute;
-  top:15%;
+  top:10%;
   left:46%;
   font-size:1rem;
-  color:rgb(223,120,103);;
+  color:rgb(223,120,103);
 }
 .login-form{
   position: relative;
  width: 90rem;
  top: 10%;
- left: 15%;
+ left: 20%;
 }
 .outback{
  background:linear-gradient(90deg,rgb(181,154,254),rgb(245,189,253));
@@ -97,8 +98,8 @@ import axios from 'axios'
 }
 .content{
   border-radius: 3rem;
-  width:400px;
-  height:400px;
+  width:500px;
+  height:500px;
   background-color:white;
     position:absolute;
   left:50%;
@@ -125,7 +126,14 @@ import axios from 'axios'
   color:rgb(181,154,254);
 }
 #lbutton{
-  color:#ccc;
+  color:rgb(223,120,103);
+  background:linear-gradient(90deg,rgb(181,154,254),rgb(245,189,253));
+  width:20.5%;
+  margin-top: 1rem;
+  font-size:1.2rem;
+}
+#sbutton{
+  color:rgb(223,120,103);
   background:linear-gradient(90deg,rgb(181,154,254),rgb(245,189,253));
   width:20.5%;
   margin-top: 1rem;
