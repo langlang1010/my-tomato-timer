@@ -1,8 +1,8 @@
 <template>
   <div class="outback">
-    <p id="title">tomato 25min</p>
     <div class="content">
       <div class="login-form">
+      
         <img src="../assets/tomato.png" />
         <div class="switch">
           <span id="login" :class="{active:isactive}" @click="change">Login</span>
@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+
 export default {
   name: "Login",
   data() {
@@ -64,15 +64,18 @@ export default {
       }
     },
     submit() {
-      alert(this.password1);
-      axios
-        .post("https://smileyan.cn/demo/register", {
-          email: this.email,
-          password: this.password1,
-          username: this.username
-        })
+      if(this.password1!=this.password2){
+        alert('两次输入密码不一致')
+      }
+      var postData=new URLSearchParams()
+      postData.append('username',this.username)
+      postData.append('password',this.password1)
+      postData.append('email',this.email)
+      this.axios
+        .post("https://smileyan.cn/demo/register",postData)
         .then(function(response) {
-          console.log(response);
+          var data=response.data
+          alert(data.msg)
         })
         .catch(function(error) {
           console.log(error);
@@ -85,14 +88,6 @@ export default {
 * {
   margin: 0;
   padding: 0;
-}
-#title {
-  text-align: center;
-  position: absolute;
-  top: 10%;
-  left: 46%;
-  font-size: 1rem;
-  color: rgb(223, 120, 103);
 }
 .login-form {
   position: relative;
