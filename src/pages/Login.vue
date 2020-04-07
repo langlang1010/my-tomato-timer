@@ -2,87 +2,166 @@
   <div class="outback">
     <div class="content">
       <div class="login-form">
-      
         <img src="../assets/tomato.png" />
         <div class="switch">
-          <span id="login" :class="{active:isactive}" @click="change">Login</span>
+          <span id="login" :class="{ active: isactive }" @click="change"
+            >Login</span
+          >
           <span>/</span>
-          <span id="Signup" :class="{active:isactive1}" @click="change1">Signup</span>
+          <span id="Signup" :class="{ active: isactive1 }" @click="change1"
+            >Signup</span
+          >
         </div>
         <transition name="fade">
           <div class="txtb" v-if="showone">
-            <input placeholder="username" type="text" class="in" />
-            <input class="in" id="passone" type="password" placeholder="password" />
+            <input
+              placeholder="username"
+              type="text"
+              class="in"
+              v-model="login_username"
+            />
+            <input
+              class="in"
+              v-model="login_password"
+              id="passone"
+              type="password"
+              placeholder="password"
+            />
           </div>
         </transition>
         <transition name="fade">
           <div class="txtb" v-if="show">
-            <input placeholder="username" type="text" class="in" v-model="username" />
-            <input placeholder="E-mail" type="text" class="in" v-model="email" />
-            <input class="in" id="passone" type="password" placeholder="password" v-model="password1" />
-            <input class="in" id="passtwo" type="password" placeholder="repeat" v-model="password2" />
+            <input
+              placeholder="username"
+              type="text"
+              class="in"
+              v-model="username"
+            />
+            <input
+              placeholder="E-mail"
+              type="text"
+              class="in"
+              v-model="email"
+            />
+            <input
+              class="in"
+              id="passone"
+              type="password"
+              placeholder="password"
+              v-model="password1"
+            />
+            <input
+              class="in"
+              id="passtwo"
+              type="password"
+              placeholder="repeat"
+              v-model="password2"
+            />
           </div>
         </transition>
-        <el-button id="lbutton" round v-if="showone">Login</el-button>
-        <el-button @click="submit" id="sbutton" round v-if="show">Submit</el-button>
+        <el-button @click="login" id="lbutton" round v-if="showone"
+          >Login</el-button
+        >
+        <el-button @click="submit" id="sbutton" round v-if="show"
+          >Submit</el-button
+        >
       </div>
     </div>
   </div>
 </template>
 <script>
-
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
       isactive: true,
       isactive1: false,
       show: false,
       showone: true,
-      username: "",
-      email: "",
-      password1: "",
-      password2: ""
-    };
+      username: '',
+      email: '',
+      password1: '',
+      password2: '',
+      login_username: '',
+      login_password: '',
+    }
   },
 
   methods: {
     change() {
-      this.isactive = !this.isactive;
-      this.isactive1 = !this.isactive1;
+      this.isactive = !this.isactive
+      this.isactive1 = !this.isactive1
       if (this.isactive === true) {
-        this.showone = true;
-        this.show = false;
+        this.showone = true
+        this.show = false
       }
     },
     change1() {
-      this.isactive1 = !this.isactive1;
-      this.isactive = !this.isactive;
+      this.isactive1 = !this.isactive1
+      this.isactive = !this.isactive
       if (this.isactive1 === true) {
-        this.show = true;
-        this.showone = false;
+        this.show = true
+        this.showone = false
       }
     },
-    submit() {
-      if(this.password1!=this.password2){
-        alert('两次输入密码不一致')
+    show_message(data, msg) {
+      var that = this
+      // 如果返回值code为200则说明登录成功
+      if (data.code === 200) {
+        // 把 token 保存起来
+        
+        this.$message({
+          message: msg,
+          type: 'success',
+          duration: 3000,
+          onClose: function() {
+            that.$router.push({ path: '/home' })
+          },
+        })
+      } else {
+        that.$message({
+          message: data.msg + '',
+          type: 'error',
+          duration: 10000,
+        })
       }
-      var postData=new URLSearchParams()
-      postData.append('username',this.username)
-      postData.append('password',this.password1)
-      postData.append('email',this.email)
+    },
+    login() {
+      var that = this
+      var postData = new URLSearchParams()
+      postData.append('username', this.login_username)
+      postData.append('password', this.login_password)
       this.axios
-        .post("https://smileyan.cn/demo/register",postData)
+        .post('https://smileyan.cn/demo/login', postData)
         .then(function(response) {
-          var data=response.data
-          alert(data.msg)
+          var data = response.data
+          that.show_message(data, '登录成功，即将跳转...')
+        })
+    },
+    submit() {
+      // 两次密码不一致
+      if (this.password1 != this.password2) {
+        this.$message.error('输入的两次密码不一致')
+        return
+      }
+
+      // 获得数据
+      var postData = new URLSearchParams()
+      postData.append('username', this.username)
+      postData.append('password', this.password1)
+      postData.append('email', this.email)
+      this.axios
+        .post('https://smileyan.cn/demo/register', postData)
+        .then(function(response) {
+          var data = response.data
+          this.show_message(data, '注册成功，即将跳转...')
         })
         .catch(function(error) {
-          console.log(error);
-        });
-    }
-  }
-};
+          console.log(error)
+        })
+    },
+  },
+}
 </script>
 <style scoped>
 * {
