@@ -109,7 +109,7 @@ export default {
       // 如果返回值code为200则说明登录成功
       if (data.code === 200) {
         // 把 token 保存起来
-        
+        window.localStorage.token = data.data
         this.$message({
           message: msg,
           type: 'success',
