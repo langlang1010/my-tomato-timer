@@ -20,7 +20,12 @@
       <div id="timer" style="text-align:center">
         <el-card class="box-card" style="float:left;width:48%">
           <div slot="header" class="clearfix">
-            <el-button style="width:100%" @click="timeset">开始计时</el-button>
+            <template v-if="running === false">
+              <el-button style="width:100%" @click="timeset">开始计时</el-button>
+            </template>
+            <template v-else>
+              <el-button style="width:100%" @click="timeset">暂停计时</el-button>
+            </template>
           </div>
           <div>
             <el-progress type="circle" style="height:150px" :percentage="time_percentage"></el-progress>
@@ -32,9 +37,22 @@
       <div id="task">
         <el-card class="box-card" style="float:right; width:48%">
           <div slot="header" class="clearfix">
-            <el-input v-model="input_msg" placeholder="现在要做什么" style="width:100%"></el-input>
+            <el-input
+              v-model="input_msg"
+              placeholder="现在要做什么"
+              @keyup.enter.native="pushtask"
+              style="width:100%"
+            ></el-input>
           </div>
-          <div style="height:172px"></div>
+          <div class="infinite-list" style="height:172px;overflow:auto">
+            <el-checkbox
+              v-model="checked"
+              @click="finish"
+              v-for="(item, index) in list"
+              :key="index"
+              style="display:block"
+            >{{item}}</el-checkbox>
+          </div>
         </el-card>
       </div>
     </div>
@@ -51,13 +69,23 @@ export default {
       seconds: 0,
       timer: "",
       time_percentage: 100,
-      input_msg: ''
+      input_msg: "",
+      checked: false,
+      running: false,
+      message: "任务",
+      list: []
     };
   },
   methods: {
     countdown() {
       if (this.seconds === 0) {
+        // 如果时间都用完了
         if (this.minutes === 0) {
+          this.running = false;
+          this.minutes = 25;
+          // 需要clear一下时间
+          window.clearInterval(this.timer);
+          this.time_percentage = 100;
           return;
         }
         this.minutes = this.minutes - 1;
@@ -72,7 +100,22 @@ export default {
       );
     },
     timeset() {
-      this.timer = setInterval(this.countdown, 1000);
+      // 如果正在运行，就暂停（即删除定时任务）
+      if (this.running === true) {
+        window.clearInterval(this.timer);
+        this.running = false;
+      } else {
+        // 如果还没有开始运行
+        this.running = true;
+        this.timer = setInterval(this.countdown, 10);
+      }
+    },
+    pushtask() {
+      this.list.push(this.input_msg);
+      this.input_msg = "";
+    },
+    finish() {
+      this.checked = !this.checked;
     }
   }
 };
