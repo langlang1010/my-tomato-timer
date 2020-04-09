@@ -107,25 +107,40 @@ export default {
   methods: {
     loadTaskData() {
       // 获得授权码
+      var that = this;
       var token = window.localStorage["token"];
+      if (token === null) {
+        alert("fffff");
+      }
       var url = "https://smileyan.cn/demo/user/tasks/" + token;
       this.axios.get(url).then(response => {
         let res = response.data;
-        // 把后台拿到的数据保存到this.list
-        var total_list = res.data;
-        // 判断需要删除的元素
-        var list1 = [];
-        var list2 = [];
-        // 遍历
-        for (var i = 0; i < total_list.length; i++) {
-          if (total_list[i].finished === true) {
-            list1.push(total_list[i]);
-          } else {
-            list2.push(total_list[i]);
+        if (res.code === 200) {
+          // 把后台拿到的数据保存到this.list
+          var total_list = res.data;
+          // 判断需要删除的元素
+          var list1 = [];
+          var list2 = [];
+          // 遍历
+          for (var i = 0; i < total_list.length; i++) {
+            if (total_list[i].finished === true) {
+              list1.push(total_list[i]);
+            } else {
+              list2.push(total_list[i]);
+            }
           }
+          this.list_finished = list1;
+          this.list = list2;
+        } else {
+          this.$message({
+            message: res.msg + "，即将前去登录...",
+            type: "error",
+            duration: 1000,
+            onClose: function() {
+              that.$router.push({ path: "/" });
+            }
+          });
         }
-        this.list_finished = list1;
-        this.list = list2;
       });
     },
     countdown() {
@@ -168,17 +183,20 @@ export default {
       var that = this;
       var token = window.localStorage["token"];
       var postData = new URLSearchParams();
-      postData.append("taskName", taskName);
-      postData.append("token", token);
-      this.axios
-        .post("https://smileyan.cn/demo/user/add", postData)
-        .then(function(response) {
-          let res = response.data;
-          var task = res.data;
-          that.list.push(task);
-          that.show_message(res, "添加成功");
-        });
-
+      if (taskName.trim() === "") {
+        return;
+      } else {
+        postData.append("taskName", taskName);
+        postData.append("token", token);
+        this.axios
+          .post("https://smileyan.cn/demo/user/add", postData)
+          .then(function(response) {
+            let res = response.data;
+            var task = res.data;
+            that.list.push(task);
+            that.show_message(res, "添加成功");
+          });
+      }
       this.input_msg = "";
     },
     // 完成任务
