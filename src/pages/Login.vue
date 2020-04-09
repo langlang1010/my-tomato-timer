@@ -1,5 +1,5 @@
 <template>
-  <div class="outback">
+  <div class="/">
     <div class="content">
       <div class="login-form">
         <img src="../assets/tomato.png" />
@@ -110,6 +110,8 @@ export default {
       if (data.code === 200) {
         // 把 token 保存起来
         window.localStorage.token = data.data
+        // 保存用户名
+        window.localStorage.username = this.login_username
         this.$message({
           message: msg,
           type: 'success',
