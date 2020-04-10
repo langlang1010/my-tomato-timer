@@ -109,14 +109,15 @@ export default {
       // 如果返回值code为200则说明登录成功
       if (data.code === 200) {
         // 把 token 保存起来
-        window.localStorage.token = data.data
+        window.localStorage.token = data.data+''
         // 保存用户名，如果是login则保存login_username
         // if(isLogin) {
         //   window.localStorage.username = this.login_username
         // } else {
         //   window.localStorage.username = this.username
         // }
-        window.localStorage.username = username
+        alert(data.data)
+        window.localStorage.username = username+''
         this.$message({
           message: msg,
           type: 'success',
