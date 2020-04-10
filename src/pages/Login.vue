@@ -1,5 +1,5 @@
 <template>
-  <div class="/">
+  <div class="outback">
     <div class="content">
       <div class="login-form">
         <img src="../assets/tomato.png" />
