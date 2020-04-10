@@ -84,7 +84,7 @@
                       v-for="item in list_finished"
                       :key="item.id"
                       @change="checkfinish(item.id)"
-                      :checked="false"
+                      :checked="true"
                       style="display:block;"
                       >{{ item.taskName }}</el-checkbox
                     >
