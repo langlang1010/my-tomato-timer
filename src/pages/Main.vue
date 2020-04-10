@@ -135,12 +135,12 @@ export default {
         alert('fffff')
       }
       var url = 'https://smileyan.cn/demo/user/tasks/' + token
+      // 拿到用户名
+      this.username = window.localStorage['username']
+      // 把后台拿到的数据保存到this.list
       this.axios.get(url).then((response) => {
         let res = response.data
         if (res.code === 200) {
-          // 拿到用户名
-          this.username = window.localStorage['username']
-          // 把后台拿到的数据保存到this.list
           var total_list = res.data
           // 判断需要删除的元素
           var list1 = []
@@ -197,7 +197,7 @@ export default {
       // 2. 跳转登录界面
       var that = this
       this.$message({
-        message: command + '成功，请在前往登录界面...',
+        message: command + '注销成功，前往登录界面',
         type: 'success',
         duration: 3000,
         onClose: function() {

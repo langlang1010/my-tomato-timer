@@ -104,14 +104,19 @@ export default {
         this.showone = false
       }
     },
-    show_message(data, msg) {
+    show_message(data, msg, username) {
       var that = this
       // 如果返回值code为200则说明登录成功
       if (data.code === 200) {
         // 把 token 保存起来
         window.localStorage.token = data.data
-        // 保存用户名
-        window.localStorage.username = this.login_username
+        // 保存用户名，如果是login则保存login_username
+        // if(isLogin) {
+        //   window.localStorage.username = this.login_username
+        // } else {
+        //   window.localStorage.username = this.username
+        // }
+        window.localStorage.username = username
         this.$message({
           message: msg,
           type: 'success',
@@ -137,7 +142,7 @@ export default {
         .post('https://smileyan.cn/demo/login', postData)
         .then(function(response) {
           var data = response.data
-          that.show_message(data, '登录成功，即将跳转...')
+          that.show_message(data, '登录成功，即将跳转...', that.login_username)
         })
     },
     submit() {
@@ -146,17 +151,19 @@ export default {
         this.$message.error('输入的两次密码不一致')
         return
       }
-
+      var that = this
       // 获得数据
       var postData = new URLSearchParams()
-      postData.append('username', this.username)
+      var username =   this.username
+      postData.append('username', username)
       postData.append('password', this.password1)
       postData.append('email', this.email)
+
       this.axios
         .post('https://smileyan.cn/demo/register', postData)
         .then(function(response) {
           var data = response.data
-          this.show_message(data, '注册成功，即将跳转...')
+          that.show_message(data, '注册成功，即将跳转...', username)
         })
         .catch(function(error) {
           console.log(error)
