@@ -133,7 +133,7 @@ export default {
       postData.append('username', this.login_username)
       postData.append('password', this.login_password)
       this.axios
-        .post('https://smileyan.cn/demo/login', postData)
+        .post(this.$global_msg.host+'/login', postData)
         .then(function(response) {
           var data = response.data
           that.show_message(data, '登录成功，即将跳转...', that.login_username)
@@ -154,7 +154,7 @@ export default {
       postData.append('email', this.email)
 
       this.axios
-        .post('https://smileyan.cn/demo/register', postData)
+        .post(this.$global_msg.host+'/register', postData)
         .then(function(response) {
           var data = response.data
           that.show_message(data, '注册成功，即将跳转...', username)

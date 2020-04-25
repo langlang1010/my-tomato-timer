@@ -23,76 +23,75 @@
     </div>
     <el-container>
       <el-main>
-    <div style="margin-top:2%; height:200px">
-      <div id="timer" style="text-align:center">
-        <el-card class="box-card" style="float:left;width:48%">
-          <div slot="header" class="clearfix">
-            <template v-if="running === false">
-              <el-button style="width:100%" @click="timeset">开始计时</el-button>
-            </template>
-            <template v-else>
-              <el-button style="width:100%" @click="timeset">暂停计时</el-button>
-            </template>
+        <div style="margin-top:2%; height:200px">
+          <div id="timer" style="text-align:center">
+            <el-card class="box-card" style="float:left;width:48%">
+              <div slot="header" class="clearfix">
+                <template v-if="running === false">
+                  <el-button style="width:100%" @click="timeset">开始计时</el-button>
+                </template>
+                <template v-else>
+                  <el-button style="width:100%" @click="timeset">暂停计时</el-button>
+                </template>
+              </div>
+              <div>
+                <el-progress type="circle" style="height:150px" :percentage="time_percentage"></el-progress>
+                <p v-if="seconds === 0">{{ minutes }}:{{ seconds }}0</p>
+                <p v-else>{{ minutes }}:{{ seconds }}</p>
+              </div>
+            </el-card>
           </div>
-          <div>
-            <el-progress type="circle" style="height:150px" :percentage="time_percentage"></el-progress>
-            <p v-if="seconds === 0">{{ minutes }}:{{ seconds }}0</p>
-            <p v-else>{{ minutes }}:{{ seconds }}</p>
+          <div id="task">
+            <el-card class="box-card" style="float:right; width:48%">
+              <div slot="header" class="clearfix">
+                <el-input
+                  v-model="input_msg"
+                  placeholder="现在要做什么"
+                  @keyup.enter.native="pushtask"
+                  style="width:100%"
+                ></el-input>
+              </div>
+              <template>
+                <div style="height:172px;overflow-y:scroll">
+                  <el-row>
+                    <el-col :span="12">
+                      <p style="color:#66CCFF">需要完成</p>
+                      <div class="grid-content bg-purple">
+                        <el-checkbox
+                          v-for="item in list"
+                          :key="item.id"
+                          @change="checkclick(item.id)"
+                          :checked="false"
+                          style="display:block;"
+                        >{{ item.taskName }}</el-checkbox>
+                      </div>
+                    </el-col>
+                    <el-col :span="12">
+                      <p style="color:#66CCFF">已经完成</p>
+                      <div class="grid-content bg-purple-light">
+                        <el-checkbox
+                          v-for="item in list_finished"
+                          :key="item.id"
+                          @change="checkfinish(item.id)"
+                          :checked="true"
+                          style="display:block;"
+                        >{{ item.taskName }}</el-checkbox>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </div>
+              </template>
+            </el-card>
           </div>
-        </el-card>
-      </div>
-      <div id="task">
-        <el-card class="box-card" style="float:right; width:48%">
-          <div slot="header" class="clearfix">
-            <el-input
-              v-model="input_msg"
-              placeholder="现在要做什么"
-              @keyup.enter.native="pushtask"
-              style="width:100%"
-            ></el-input>
-          </div>
-          <template>
-            <div style="height:172px;overflow-y:scroll">
-              <el-row>
-                <el-col :span="12">
-                  <p style="color:#66CCFF">需要完成</p>
-                  <div class="grid-content bg-purple">
-                    <el-checkbox
-                      v-for="item in list"
-                      :key="item.id"
-                      @change="checkclick(item.id)"
-                      :checked="false"
-                      style="display:block;"
-                    >{{ item.taskName }}</el-checkbox>
-                  </div>
-                </el-col>
-                <el-col :span="12">
-                  <p style="color:#66CCFF">已经完成</p>
-                  <div class="grid-content bg-purple-light">
-                    <el-checkbox
-                      v-for="item in list_finished"
-                      :key="item.id"
-                      @change="checkfinish(item.id)"
-                      :checked="true"
-                      style="display:block;"
-                    >{{ item.taskName }}</el-checkbox>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-          </template>
-        </el-card>
-      </div>
-    </div>
-    </el-main>
-       <el-footer>
-         <p>累计完成</p>
-         <p style="color:#66CCFF;font-size:2rem">{{list_finished.length}}</p>
-         <p>个任务</p>
-       </el-footer>
+        </div>
+      </el-main>
+      <el-footer>
+        <p>累计完成</p>
+        <p style="color:#66CCFF;font-size:2rem">{{list_finished.length}}</p>
+        <p>个任务</p>
+      </el-footer>
     </el-container>
   </div>
-  
 </template>
 <script>
 export default {
@@ -130,7 +129,7 @@ export default {
       if (token === null) {
         alert("fffff");
       }
-      var url = "https://smileyan.cn/demo/user/tasks/" + token;
+      var url = this.$global_msg.host + "/user/tasks/" + token;
       // 拿到用户名
       this.username = window.localStorage["username"];
       // 把后台拿到的数据保存到this.list
@@ -213,6 +212,7 @@ export default {
         this.timer = setInterval(this.countdown, 1000);
       }
     },
+
     // 添加任务
     pushtask() {
       var taskName = this.input_msg;
@@ -225,7 +225,7 @@ export default {
         postData.append("taskName", taskName);
         postData.append("token", token);
         this.axios
-          .post("https://smileyan.cn/demo/user/add", postData)
+          .post(this.$global_msg.host + "/user/add", postData)
           .then(function(response) {
             let res = response.data;
             var task = res.data;
@@ -235,7 +235,11 @@ export default {
             that.list.push(task);
             // 再次倒过来
             that.list = that.list.reverse();
-            that.show_message(res.msg, "添加成功");
+            that.$message({
+              message: '添加成功',
+              type: "success",
+              duration: 2000
+            });
           });
       }
       this.input_msg = "";
@@ -248,7 +252,7 @@ export default {
       postData.append("taskId", taskId);
       postData.append("token", token);
       this.axios
-        .post("https://smileyan.cn/demo/user/finish", postData)
+        .post(this.$global_msg.host + "/user/finish", postData)
         .then(function(response) {
           var data = response.data;
           console.log(data);
@@ -262,7 +266,7 @@ export default {
       postData.append("taskId", taskId);
       postData.append("token", token);
       this.axios
-        .post("https://smileyan.cn/demo/user/restart", postData)
+        .post(this.$global_msg.host + "/user/restart", postData)
         .then(function(response) {
           var data = response.data;
           console.log(data);
