@@ -8,6 +8,23 @@
 * element-ui: 2.13.0
 * 后端开发：参考[https://github.com/langlang1010/my-tomato-timer-serve](https://github.com/langlang1010/my-tomato-timer-serve)
 
+### 运行与打包
+
+**安装依赖**
+```bash
+cnpm install 
+```
+
+**本地运行**
+```bash
+npm run serve
+```
+
+**打包**
+```bash
+npm run build
+```
+
 ### 小结
 麻雀虽小，五脏俱全。虽然是个非常小的项目，但也用到了一些常用的方法，有一定的参考价值。
 
