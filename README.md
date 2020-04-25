@@ -1,24 +1,16 @@
-# element-demo1
+## my-tomato-timer
 
-## Project setup
-```
-npm install
-```
+一个简单的任务管理工具。欢迎查看效果。[https://x.withyan.cn/tomato/](https://x.withyan.cn/tomato/)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### 简单介绍
+* 开发工具：vscode
+* Vue: 2.6.11
+* element-ui: 2.13.0
+* 后端开发：参考[https://github.com/langlang1010/my-tomato-timer-serve](https://github.com/langlang1010/my-tomato-timer-serve)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### 小结
+麻雀虽小，五脏俱全。虽然是个非常小的项目，但也用到了一些常用的方法，有一定的参考价值。
 
-### Lints and fixes files
-```
-npm run lint
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
